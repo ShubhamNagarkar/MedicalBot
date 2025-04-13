@@ -23,12 +23,6 @@ This approach helps to ground the LLM's responses in factual data from the knowl
 4.  **Utilities (`utils.py`):** Helper functions support various tasks throughout the notebooks.
 
 
-Okay, this is excellent detail about your experimental process and findings. Here's how you can integrate this information into the README, likely as a new section detailing the implementation choices and rationale.
-
-Add this section, perhaps after the ## 📁 Repository Structure section:
-
-Markdown
-
 ## 🛠️ Implementation Details & Experiments
 
 This section details key technical decisions and findings from experiments conducted during the development of MedicalBot's RAG pipeline, primarily documented in `RAG_retrieval_analysis.ipynb`.
