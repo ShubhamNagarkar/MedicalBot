@@ -89,6 +89,39 @@ The vector index stores the embeddings for fast retrieval.
 * **Ease of Use:** It is relatively easy to integrate, operates in-memory, and allows straightforward saving/loading of the index, making it ideal for rapid prototyping, POCs, and MVPs.
 * **Scalability:** While FAISS is suitable for this stage, alternative vector databases like Milvus or Pinecone are noted as potential options for future scaling if required (offering managed hosting, advanced features, etc.).
 
+## 📊 Evaluation
+
+The performance of the MedicalBot RAG system was evaluated using both automated metrics (ROUGE and BERTScore) and manual inspection of the generated answers. Detailed evaluation procedures and results can be found in the `RAGMedicalBot.ipynb` notebook.
+
+### ROUGE Metrics (Lexical Overlap)
+
+ROUGE scores measure the overlap between the generated answers and the reference answers from the dataset based on n-grams and sequence alignment.
+
+* **`ROUGE-1` (Unigram Overlap): 0.41** - Indicates that approximately 41% of the individual words (unigrams) in the reference answers were also present in the generated answers.
+* **`ROUGE-2` (Bigram Overlap): 0.28** - Shows a lower overlap for word pairs (bigrams), suggesting that while individual terms might be present, exact phrasing is less common.
+* **`ROUGE-L` (Longest Common Subsequence): 0.325** - Implies moderate structural alignment; the system often reorders or paraphrases content rather than replicating exact sequences from the source.
+
+**ROUGE Conclusion:** The moderate ROUGE scores suggest that the model does not simply copy text verbatim. It retains key terms (reflected in ROUGE-1) but often paraphrases or restructures sentences (lower ROUGE-2 and ROUGE-L). Manual checks confirmed the model was well-grounded by the retrieved passages with minimal hallucination. The degree of paraphrasing could potentially be tuned via LLM temperature settings in future refinements.
+
+### BERTScore Metrics (Semantic Similarity)
+
+BERTScore compares the semantic similarity between generated and reference answers using contextual embeddings, providing insight beyond exact word matches.
+
+* **`Precision`: 0.859** - Indicates that most of the information in the generated answers is semantically relevant to the reference answers, suggesting low hallucination of irrelevant content.
+* **`Recall`: 0.873** - Shows that the generated answers capture a large portion of the relevant semantic content present in the reference answers, indicating completeness.
+* **`F1-Score`: 0.866** - The high F1 score demonstrates strong overall semantic similarity; the generated answers are semantically very close to the reference answers, even when the wording differs significantly.
+
+**BERTScore Conclusion:** The high BERTScore results strongly suggest that the LLM effectively understands and conveys the correct medical facts derived from the provided context passages. High recall points to informative answers, while high precision indicates relevance and focus.
+
+### Overall Conclusion
+
+Combining the automated metrics with manual inspection, it's evident that the RAG system performs well for the Medical Q&A task.
+* The system produces **factually correct and relevant answers**, drawing accurately from the retrieved context.
+* It tends to **paraphrase or reformat information** rather than copying exact sentences, which is desirable behavior for a helpful assistant.
+* While lexical similarity (ROUGE) is moderate due to this paraphrasing, **semantic similarity (BERTScore) is high**, confirming that the core meaning and essential medical information are accurately conveyed.
+
+This indicates the chosen RAG approach successfully leverages the provided dataset to generate trustworthy and understandable answers to medical queries.
+
 ## 🔮 Future Scope
 
 While the current MedicalBot implementation provides a solid baseline, especially considering potential memory and single-GPU constraints, there are numerous avenues for enhancing each component of the RAG architecture:
