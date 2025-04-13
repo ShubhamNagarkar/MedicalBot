@@ -88,3 +88,44 @@ The vector index stores the embeddings for fast retrieval.
 * **Performance:** FAISS is highly optimized for speed and efficiency in similarity searching.
 * **Ease of Use:** It is relatively easy to integrate, operates in-memory, and allows straightforward saving/loading of the index, making it ideal for rapid prototyping, POCs, and MVPs.
 * **Scalability:** While FAISS is suitable for this stage, alternative vector databases like Milvus or Pinecone are noted as potential options for future scaling if required (offering managed hosting, advanced features, etc.).
+
+## 🔮 Future Scope
+
+While the current MedicalBot implementation provides a solid baseline, especially considering potential memory and single-GPU constraints, there are numerous avenues for enhancing each component of the RAG architecture:
+
+### Embedding Models
+
+* **Domain-Specific Models:** Explore larger embedding models specifically pre-trained or fine-tuned on extensive medical and clinical corpora. These could offer more nuanced understanding of medical terminologies compared to general-purpose models.
+* **Increased Dimensionality:** Experiment with models offering higher embedding dimensions (beyond the 384 used) which might capture more semantic detail, potentially at the cost of increased computational requirements.
+
+### RAG Pipeline Enhancements
+
+* **LLM-Powered Data Filtering:** Implement a pre-processing step where an LLM filters the source dataset to remove answers lacking substantial contextual information relative to their questions. This could lead to a cleaner, more relevant vector index.
+* **Topic Modeling / Intent Classification:**
+    * Train a classifier to categorize user queries into predefined medical topics (e.g., Glaucoma, Cancer, Diabetes).
+    * Use predicted topics to filter retrieval results (semantic routing) or as features in the re-ranking step.
+    * Leverage topic classification to detect Out-of-Domain (OOD) queries.
+* **Query Rewriting/Expansion:**
+    * Utilize LLMs to rewrite or expand short/ambiguous user queries, potentially adding relevant medical context or synonyms.
+    * Augment queries with conversation history for contextually relevant follow-up answers.
+* **Advanced Indexing & Retrieval:**
+    * Explore managed or more scalable vector databases (e.g., `Milvus`, `Pinecone`, `Weaviate`) for larger datasets and production environments.
+    * Implement **Contextual RAG:** Use an LLM to generate concise summaries or contextual descriptions for each chunk and prepend this context before indexing to potentially improve retrieval relevance.
+    * Adopt **Hybrid Search:** Combine dense vector retrieval (like cosine similarity) with sparse retrieval methods (like `BM25`) to leverage both semantic meaning and keyword matching.
+* **Advanced Re-Ranking:**
+    * Employ more sophisticated re-ranking models, possibly using cross-encoders or even LLMs prompted to assess the relevance of retrieved chunks to the query.
+    * Investigate **Agentic RAG** approaches where multiple steps or "agents" collaborate on retrieval, synthesis, and verification, if latency permits.
+
+### LLM Improvements (Generator)
+
+* **Larger Context Windows:** Utilize LLMs capable of handling larger input context windows, allowing more retrieved information to be considered when generating answers.
+* **Medical Domain LLMs:** Experiment with LLMs specifically fine-tuned for medical dialogue or text generation (e.g., Med-PaLM variants, Meditron).
+* **Model Scale:** Explore larger LLMs (e.g., 7B+ parameters) which generally exhibit better reasoning and generation capabilities, potentially leading to improved ROUGE and BERT scores.
+* **Fine-tuning (LoRA):** If a high-quality, curated medical Q&A dataset is available, consider fine-tuning an open-source base LLM using techniques like LoRA (Low-Rank Adaptation) to enhance its factual grounding and response style for the medical domain.
+* **LLM-as-Judge:** Employ powerful LLMs to evaluate the generated responses for factual consistency against retrieved sources, relevance to the query, and overall quality.
+
+### Scalability & Feasibility Considerations
+
+* **Latency:** Multiple LLM calls (e.g., for filtering, query expansion, re-ranking, generation, judging) can introduce significant latency, which needs careful management in real-time systems.
+* **Hosting Costs:** Deploying multiple large LLMs and maintaining scalable vector databases incurs substantial infrastructure and computational costs.
+* **Cost Optimization:** Techniques like LoRA fine-tuning on open-source models might offer a more cost-effective alternative to relying solely on proprietary, paid LLM APIs, especially under high user traffic scenarios.
