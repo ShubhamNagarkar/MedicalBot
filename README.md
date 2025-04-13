@@ -15,7 +15,7 @@ This project implements a **Retrieval-Augmented Generation (RAG)** approach. Thi
 
 This approach helps to ground the LLM's responses in factual data from the knowledge base, reducing hallucinations and improving the accuracy of the answers.
 
-## 🛠️ Key Components & Workflow
+## 📁 Repository Structure:
 
 1.  **Data Preprocessing (`data-analysis.ipynb`):** The initial dataset (`medical_dataset.csv`) is loaded, explored, and cleaned. This involves structuring the Q&A pairs appropriately, handling inconsistencies, and saving the processed data (`clean_questions_to_answers_dataset_v1.json`).
 2.  **RAG Experiment (`RAG_retrieval_analysis.ipynb`):** This notebook contains benchmarking experiments concerning Chunking, Indexing, Retrieval logic, Ranking and Retrieval Testing.
